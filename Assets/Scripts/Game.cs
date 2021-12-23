@@ -14,6 +14,8 @@ public class Game : MonoBehaviour
     private LifeBar lifebarLeft;
     [SerializeField]
     private LifeBar lifebarRight;
+    [SerializeField]
+    private RoundCounter roundCounter;
 
     private bool fightStarted = false;
     private bool fightEnded = false;
@@ -23,11 +25,6 @@ public class Game : MonoBehaviour
         timer.OnTimerFinished += HandleTimeout;
 
         StartCountdown();
-    }
-
-    private void Update()
-    {
-
     }
 
     private void HandleTimeout()
