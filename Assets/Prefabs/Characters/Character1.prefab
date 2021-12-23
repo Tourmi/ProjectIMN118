@@ -75,6 +75,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 700
   jumpSpeed: 5400
+  dashSpeed: 4200
+  dashDuration: 5
   lightAttack: {fileID: 2779177357677339046}
   mediumAttack: {fileID: 3853980014389627547}
   heavyAttack: {fileID: 5175954974658213254}

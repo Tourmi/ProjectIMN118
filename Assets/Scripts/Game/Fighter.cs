@@ -14,6 +14,10 @@ public class Fighter : MonoBehaviour
     [SerializeField]
     private float jumpSpeed = 1800;
     [SerializeField]
+    private float dashSpeed = 1200;
+    [SerializeField]
+    private int dashDuration = 15;
+    [SerializeField]
     private Attack lightAttack;
     [SerializeField]
     private Attack mediumAttack;
@@ -24,7 +28,7 @@ public class Fighter : MonoBehaviour
     [SerializeField]
     private Transform Sprite;
 
-    public float MaxHealth  = 3000;
+    public float MaxHealth = 3000;
     public float CurrentHealth = 3000;
 
     private new Rigidbody2D rigidbody;
@@ -34,7 +38,9 @@ public class Fighter : MonoBehaviour
 
     private bool isJumping;
     private int movement;
+    private int dashMovement;
     private bool isCrouching;
+    private bool isDashing;
 
     private bool isLightAttacking;
     private bool isMediumAttacking;
@@ -77,6 +83,7 @@ public class Fighter : MonoBehaviour
 
     public int BlockStun { get; set; }
     public int HitStun { get; set; }
+    public int DashTimer { get; set; }
 
     public bool IsBlocking => IsGrounded && movement == -1 && !isAttacking && HitStun <= 0;
 
@@ -101,18 +108,38 @@ public class Fighter : MonoBehaviour
 
     private void OnCrouch(InputValue value) => isCrouching = value.isPressed;
 
+    private void OnDashLeft()
+    {
+        if (CanDash)
+        {
+            dashMovement = -1;
+            isDashing = true;
+            DashTimer = dashDuration;
+        }
+    }
+    private void OnDashRight()
+    {
+        if (CanDash)
+        {
+            dashMovement = 1;
+            isDashing = true;
+            DashTimer = dashDuration;
+        }
+    }
+
     private void OnLightAttack() => isLightAttacking = true;
     private void OnMediumAttack() => isMediumAttacking = true;
-    private void OnHeavyAttack() => isHeavyAttacking = true && CurrentHealth <= MaxHealth /3f * 2f;
+    private void OnHeavyAttack() => isHeavyAttacking = true && CurrentHealth <= MaxHealth / 3f * 2f;
     private void OnSpecialAttack() => isSpecialAttacking = true && CurrentHealth <= MaxHealth / 3f;
 
     private bool isAttacking;
 
     private bool IsGrounded => Physics2D.RaycastAll(transform.position, Vector2.down, transform.localScale.y / 2 + ESPILON).Where(r => r.transform.CompareTag("Ground")).Any();
-    private bool CanCrouch => IsGrounded && !FightFinished && HitStun <= 0;
-    private bool CanAttack => (!isAttacking || attackLanded) && !FightFinished && FightStarted && BlockStun <= 0 && HitStun <= 0;
-    private bool CanMove => IsGrounded && !isAttacking && !isCrouching && !FightFinished && BlockStun <= 0 && HitStun <= 0;
-    private bool CanJump => IsGrounded && !isAttacking && !FightFinished && BlockStun <= 0 && HitStun <= 0;
+    private bool CanCrouch => IsGrounded && !FightFinished && HitStun <= 0 && !isDashing;
+    private bool CanAttack => (!isAttacking || attackLanded) && !FightFinished && FightStarted && BlockStun <= 0 && HitStun <= 0 && !isDashing;
+    private bool CanMove => IsGrounded && !isAttacking && !isCrouching && !FightFinished && BlockStun <= 0 && HitStun <= 0 && !isDashing;
+    private bool CanJump => IsGrounded && !isAttacking && !FightFinished && BlockStun <= 0 && HitStun <= 0 && !isDashing;
+    private bool CanDash => !isAttacking && BlockStun <= 0 && HitStun <= 0 && !FightFinished && !isCrouching && !isDashing;
 
     private void FixedUpdate()
     {
@@ -120,7 +147,8 @@ public class Fighter : MonoBehaviour
         {
             Sprite.localScale = new Vector3(1f, 0.5f, 1f);
             Sprite.localPosition = new Vector3(0f, -0.25f, 0f);
-        } else
+        }
+        else
         {
             Sprite.localScale = Vector3.one;
             Sprite.localPosition = Vector3.zero;
@@ -172,8 +200,21 @@ public class Fighter : MonoBehaviour
             rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpSpeed);
         }
 
+        if (isDashing)
+        {
+            if (DashTimer <= 0)
+            {
+                isDashing = false;
+            }
+            else
+            {
+                rigidbody.velocity = new Vector2(dashMovement * dashSpeed, 0);
+            }
+        }
+
         HitStun--;
         BlockStun--;
+        DashTimer--;
     }
 
     private void HandleAttackEnd()
