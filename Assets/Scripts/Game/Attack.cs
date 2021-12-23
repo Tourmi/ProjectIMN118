@@ -12,6 +12,8 @@ public class Attack : MonoBehaviour
     public GameObject HitboxPreview;
     public GameObject HitboxVisual;
     public GameObject HitboxPostVisual;
+    public bool AirAttack;
+    public bool CrouchAttack;
     public int Damage;
     public int StartFrames;
     public int ActiveFrames;
@@ -74,23 +76,39 @@ public class Attack : MonoBehaviour
     {
         if (collision.CompareTag("Player") && collision.gameObject != Owner.gameObject && hitboxActive)
         {
-            bool isToTheRight = transform.position.x - collision.transform.position.x < 0;
-
             Fighter otherFighter = collision.GetComponent<Fighter>();
             Rigidbody2D otherRigidBody = collision.GetComponent<Rigidbody2D>();
-            if (otherFighter.IsBlocking)
-            {
-                otherFighter.CurrentHealth -= Damage / 4;
-                otherFighter.BlockStun = BlockStun;
-                otherRigidBody.velocity = new Vector2(isToTheRight ? Damage * 10 : -Damage * 10, otherRigidBody.velocity.y);
-                Owner.velocity = new Vector2(isToTheRight ? -Damage * 10 : Damage * 10, Owner.velocity.y);
-            }
-            else
+
+            bool isToTheRight = otherFighter.EnemyDirection > 0;
+            //Did not block the attack properly
+            if (!otherFighter.IsBlocking || AirAttack && !otherFighter.IsStandingBlocking || CrouchAttack && !otherFighter.IsCrouchBlocking)
             {
                 otherFighter.CurrentHealth -= Damage;
                 otherFighter.HitStun = HitStun;
-                otherRigidBody.velocity = new Vector2(isToTheRight ? Damage * 20 : -Damage * 20, otherRigidBody.velocity.y);
-                Owner.velocity = new Vector2(isToTheRight ? -Damage * 10 : Damage * 10, Owner.velocity.y);
+                float knockback = isToTheRight ? Damage * 20 : -Damage * 20;
+                if (!otherFighter.IsAgainstWall)
+                {
+                    otherRigidBody.velocity = new Vector2(knockback, otherRigidBody.velocity.y);
+                }
+                else
+                {
+                    Owner.velocity = new Vector2(-knockback, Owner.velocity.y);
+                }
+            }
+            //Did block the attack properly
+            else
+            {
+                otherFighter.CurrentHealth -= Damage / 4;
+                otherFighter.BlockStun = BlockStun;
+                float knockback = isToTheRight ? Damage * 10 : -Damage * 10;
+                if (!otherFighter.IsAgainstWall)
+                {
+                    otherRigidBody.velocity = new Vector2(knockback, otherRigidBody.velocity.y);
+                }
+                else
+                {
+                    Owner.velocity = new Vector2(-knockback, Owner.velocity.y);
+                }
             }
             hitboxActive = false;
 

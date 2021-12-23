@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Fighter : MonoBehaviour
 {
-    private const float ESPILON = 1f;
+    private const float ESPILON = 5f;
 
     [SerializeField]
     private float speed = 700;
@@ -18,6 +18,12 @@ public class Fighter : MonoBehaviour
     [SerializeField]
     private int dashDuration = 15;
     [SerializeField]
+    private Transform Sprite;
+    [SerializeField]
+    private Transform Opponent;
+
+    [Header("Attacks")]
+    [SerializeField]
     private Attack lightAttack;
     [SerializeField]
     private Attack mediumAttack;
@@ -25,8 +31,24 @@ public class Fighter : MonoBehaviour
     private Attack heavyAttack;
     [SerializeField]
     private Attack specialAttack;
+
     [SerializeField]
-    private Transform Sprite;
+    private Attack lightAirAttack;
+    [SerializeField]
+    private Attack mediumAirAttack;
+    [SerializeField]
+    private Attack heavyAirAttack;
+    [SerializeField]
+    private Attack specialAirAttack;
+
+    [SerializeField]
+    private Attack lightCrouchAttack;
+    [SerializeField]
+    private Attack mediumCrouchAttack;
+    [SerializeField]
+    private Attack heavyCrouchAttack;
+    [SerializeField]
+    private Attack specialCrouchAttack;
 
     public float MaxHealth = 3000;
     public float CurrentHealth = 3000;
@@ -42,6 +64,8 @@ public class Fighter : MonoBehaviour
     private bool isCrouching;
     private bool isDashing;
 
+    private bool wasAirborne = false;
+
     private bool isLightAttacking;
     private bool isMediumAttacking;
     private bool isHeavyAttacking;
@@ -53,15 +77,37 @@ public class Fighter : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody2D>();
 
+        //Attack ended event
         lightAttack.OnAttackEnd += HandleAttackEnd;
         mediumAttack.OnAttackEnd += HandleAttackEnd;
         heavyAttack.OnAttackEnd += HandleAttackEnd;
         specialAttack.OnAttackEnd += HandleAttackEnd;
 
+        lightAirAttack.OnAttackEnd += HandleAttackEnd;
+        mediumAirAttack.OnAttackEnd += HandleAttackEnd;
+        heavyAirAttack.OnAttackEnd += HandleAttackEnd;
+        specialAirAttack.OnAttackEnd += HandleAttackEnd;
+
+        lightCrouchAttack.OnAttackEnd += HandleAttackEnd;
+        mediumCrouchAttack.OnAttackEnd += HandleAttackEnd;
+        heavyCrouchAttack.OnAttackEnd += HandleAttackEnd;
+        specialCrouchAttack.OnAttackEnd += HandleAttackEnd;
+
+        //Landed attack event
         lightAttack.OnAttackLanded += HandleAttackLanded;
         mediumAttack.OnAttackLanded += HandleAttackLanded;
         heavyAttack.OnAttackLanded += HandleAttackLanded;
         specialAttack.OnAttackLanded += HandleAttackLanded;
+
+        lightAirAttack.OnAttackLanded += HandleAttackLanded;
+        mediumAirAttack.OnAttackLanded += HandleAttackLanded;
+        heavyAirAttack.OnAttackLanded += HandleAttackLanded;
+        specialAirAttack.OnAttackLanded += HandleAttackLanded;
+
+        lightCrouchAttack.OnAttackLanded += HandleAttackLanded;
+        mediumCrouchAttack.OnAttackLanded += HandleAttackLanded;
+        heavyCrouchAttack.OnAttackLanded += HandleAttackLanded;
+        specialCrouchAttack.OnAttackLanded += HandleAttackLanded;
     }
 
     public void Initialize(Vector3 initialPosition)
@@ -86,6 +132,12 @@ public class Fighter : MonoBehaviour
     public int DashTimer { get; set; }
 
     public bool IsBlocking => IsGrounded && movement == -1 && !isAttacking && HitStun <= 0;
+    public bool IsCrouchBlocking => IsBlocking && isCrouching;
+    public bool IsStandingBlocking => IsBlocking && !isCrouching;
+    public bool IsMovingAway => movement * EnemyDirection < 0;
+    public bool IsAgainstWall => Physics2D.RaycastAll(transform.position, Vector2.left, -transform.localScale.x / 2 + ESPILON).Where(r => r.transform.CompareTag("Wall")).Any()
+        || Physics2D.RaycastAll(transform.position, Vector2.right, transform.localScale.x / 2 + ESPILON).Where(r => r.transform.CompareTag("Wall")).Any();
+    public int EnemyDirection => (Opponent.transform.position.x - transform.position.x) < 0 ? 1 : -1;
 
     private void OnJump(InputValue value) => isJumping = value.isPressed;
 
@@ -139,7 +191,7 @@ public class Fighter : MonoBehaviour
     private bool CanAttack => (!isAttacking || attackLanded) && !FightFinished && FightStarted && BlockStun <= 0 && HitStun <= 0 && !isDashing;
     private bool CanMove => IsGrounded && !isAttacking && !isCrouching && !FightFinished && BlockStun <= 0 && HitStun <= 0 && !isDashing;
     private bool CanJump => IsGrounded && !isAttacking && !FightFinished && BlockStun <= 0 && HitStun <= 0 && !isDashing;
-    private bool CanDash => !isAttacking && BlockStun <= 0 && HitStun <= 0 && !FightFinished && !isCrouching && !isDashing;
+    private bool CanDash => (!isAttacking || attackLanded) && BlockStun <= 0 && HitStun <= 0 && !FightFinished && !isCrouching && !isDashing;
 
     private void FixedUpdate()
     {
@@ -160,7 +212,11 @@ public class Fighter : MonoBehaviour
             isAttacking = true;
             isLightAttacking = false;
             attackLanded = false;
-            lightAttack.StartAttack();
+
+            Attack attack = lightAttack;
+            if (!IsGrounded) attack = lightAirAttack;
+            else if (isCrouching && CanCrouch) attack = lightCrouchAttack;
+            attack.StartAttack();
         }
 
         if (isMediumAttacking && CanAttack)
@@ -169,7 +225,11 @@ public class Fighter : MonoBehaviour
             isAttacking = true;
             isMediumAttacking = false;
             attackLanded = false;
-            mediumAttack.StartAttack();
+
+            Attack attack = mediumAttack;
+            if (!IsGrounded) attack = mediumAirAttack;
+            else if (isCrouching && CanCrouch) attack = mediumCrouchAttack;
+            attack.StartAttack();
         }
 
         if (isHeavyAttacking && CanAttack)
@@ -178,7 +238,11 @@ public class Fighter : MonoBehaviour
             isAttacking = true;
             isHeavyAttacking = false;
             attackLanded = false;
-            heavyAttack.StartAttack();
+
+            Attack attack = heavyAttack;
+            if (!IsGrounded) attack = heavyAirAttack;
+            else if (isCrouching && CanCrouch) attack = heavyCrouchAttack;
+            attack.StartAttack();
         }
 
         if (isSpecialAttacking && CanAttack)
@@ -187,7 +251,11 @@ public class Fighter : MonoBehaviour
             isAttacking = true;
             isSpecialAttacking = false;
             attackLanded = false;
-            specialAttack.StartAttack();
+
+            Attack attack = specialAttack;
+            if (!IsGrounded) attack = specialAirAttack;
+            else if (isCrouching && CanCrouch) attack = specialCrouchAttack;
+            attack.StartAttack();
         }
 
         if (CanMove)
@@ -202,6 +270,8 @@ public class Fighter : MonoBehaviour
 
         if (isDashing)
         {
+            CancelAttacks();
+
             if (DashTimer <= 0)
             {
                 isDashing = false;
@@ -212,9 +282,27 @@ public class Fighter : MonoBehaviour
             }
         }
 
+        if (wasAirborne && IsGrounded)
+        {
+            FighterLanded();
+        }
+
+        wasAirborne = !IsGrounded;
+
         HitStun--;
         BlockStun--;
         DashTimer--;
+    }
+
+    private void FighterLanded()
+    {
+        lightAirAttack.CancelAttack();
+        mediumAirAttack.CancelAttack();
+        heavyAirAttack.CancelAttack();
+        specialAirAttack.CancelAttack();
+
+        isAttacking = false;
+        attackLanded = false;
     }
 
     private void HandleAttackEnd()
@@ -233,5 +321,18 @@ public class Fighter : MonoBehaviour
         mediumAttack.CancelAttack();
         heavyAttack.CancelAttack();
         specialAttack.CancelAttack();
+
+        lightAirAttack.CancelAttack();
+        mediumAirAttack.CancelAttack();
+        heavyAirAttack.CancelAttack();
+        specialAirAttack.CancelAttack();
+
+        lightCrouchAttack.CancelAttack();
+        mediumCrouchAttack.CancelAttack();
+        heavyCrouchAttack.CancelAttack();
+        specialCrouchAttack.CancelAttack();
+
+        isAttacking = false;
+        attackLanded = false;
     }
 }

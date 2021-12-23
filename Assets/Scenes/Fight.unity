@@ -473,7 +473,7 @@ PrefabInstance:
     - target: {fileID: 3056265426973273035, guid: 95a489f49700b1f459b5d8b9f2f65b3e, type: 3}
       propertyPath: fighter
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2073132512}
     - target: {fileID: 3689806804028043924, guid: 95a489f49700b1f459b5d8b9f2f65b3e, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -921,7 +921,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stage: {fileID: 435861263}
   character1: {fileID: 2625655653278790783}
-  character2: {fileID: 0}
+  character2: {fileID: 2073132513}
   leftCameraWall: {fileID: 1839979625}
   rightCameraWall: {fileID: 708115293}
 --- !u!1 &1486924468
@@ -1218,6 +1218,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8224281087317048769, guid: ce78c8680020bca42b503a86e7a32d8e, type: 3}
+      propertyPath: Opponent
+      value: 
+      objectReference: {fileID: 2625655653278790783}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce78c8680020bca42b503a86e7a32d8e, type: 3}
 --- !u!114 &2073132512 stripped
@@ -1601,6 +1605,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8224281087317048769, guid: 7ed0cd1c548ee264caaa3a14f6333938, type: 3}
+      propertyPath: Opponent
+      value: 
+      objectReference: {fileID: 2073132513}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7ed0cd1c548ee264caaa3a14f6333938, type: 3}
 --- !u!4 &2625655653278790783 stripped

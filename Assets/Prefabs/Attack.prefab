@@ -136,6 +136,8 @@ MonoBehaviour:
   HitboxPreview: {fileID: 8112110988726504225}
   HitboxVisual: {fileID: 2378329911861093986}
   HitboxPostVisual: {fileID: 7221929459550661543}
+  AirAttack: 0
+  CrouchAttack: 0
   Damage: 50
   StartFrames: 3
   ActiveFrames: 2
