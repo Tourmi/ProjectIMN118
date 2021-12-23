@@ -17,13 +17,13 @@ public class RoundCounter : MonoBehaviour
     [SerializeField]
     private TMP_Text RoundNumber;
 
-    private int roundNumber = 1;
+    private int roundNumber = 0;
     private int player1WonCount = 0;
     private int player2WonCount = 0;
 
     public void Initialize()
     {
-        roundNumber = 1;
+        roundNumber = 0;
         player1WonCount = 0;
         player2WonCount = 0;
 
@@ -59,4 +59,6 @@ public class RoundCounter : MonoBehaviour
 
         UpdateUI();
     }
+
+    public bool MatchEnded() => player2WonCount >= 2 || player1WonCount >= 2;
 }

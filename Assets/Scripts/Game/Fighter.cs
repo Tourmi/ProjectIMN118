@@ -9,23 +9,76 @@ public class Fighter : MonoBehaviour
 {
     private const float ESPILON = 1f;
 
-
     [SerializeField]
     private float speed = 700;
     [SerializeField]
     private float jumpSpeed = 1800;
+    [SerializeField]
+    private Attack lightAttack;
+    [SerializeField]
+    private Attack mediumAttack;
+    [SerializeField]
+    private Attack heavyAttack;
+    [SerializeField]
+    private Attack specialAttack;
+    [SerializeField]
+    private Transform Sprite;
 
-    private Rigidbody2D rigidbody;
-    private bool isGrounded = true;
+    public float MaxHealth  = 3000;
+    public float CurrentHealth = 3000;
+
+    private new Rigidbody2D rigidbody;
+
+    public bool FightStarted = false;
+    public bool FightFinished = false;
 
     private bool isJumping;
     private int movement;
     private bool isCrouching;
 
+    private bool isLightAttacking;
+    private bool isMediumAttacking;
+    private bool isHeavyAttacking;
+    private bool isSpecialAttacking;
+
+    private bool attackLanded;
+
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
+
+        lightAttack.OnAttackEnd += HandleAttackEnd;
+        mediumAttack.OnAttackEnd += HandleAttackEnd;
+        heavyAttack.OnAttackEnd += HandleAttackEnd;
+        specialAttack.OnAttackEnd += HandleAttackEnd;
+
+        lightAttack.OnAttackLanded += HandleAttackLanded;
+        mediumAttack.OnAttackLanded += HandleAttackLanded;
+        heavyAttack.OnAttackLanded += HandleAttackLanded;
+        specialAttack.OnAttackLanded += HandleAttackLanded;
     }
+
+    public void Initialize(Vector3 initialPosition)
+    {
+        isJumping = false;
+        movement = 0;
+        isCrouching = false;
+        FightStarted = false;
+        FightFinished = false;
+
+        isLightAttacking = false;
+        isMediumAttacking = false;
+        isHeavyAttacking = false;
+        isSpecialAttacking = false;
+        CurrentHealth = MaxHealth;
+
+        transform.localPosition = initialPosition;
+    }
+
+    public int BlockStun { get; set; }
+    public int HitStun { get; set; }
+
+    public bool IsBlocking => IsGrounded && movement == -1 && !isAttacking && HitStun <= 0;
 
     private void OnJump(InputValue value) => isJumping = value.isPressed;
 
@@ -48,28 +101,96 @@ public class Fighter : MonoBehaviour
 
     private void OnCrouch(InputValue value) => isCrouching = value.isPressed;
 
+    private void OnLightAttack() => isLightAttacking = true;
+    private void OnMediumAttack() => isMediumAttacking = true;
+    private void OnHeavyAttack() => isHeavyAttacking = true && CurrentHealth <= MaxHealth /3f * 2f;
+    private void OnSpecialAttack() => isSpecialAttacking = true && CurrentHealth <= MaxHealth / 3f;
+
+    private bool isAttacking;
+
+    private bool IsGrounded => Physics2D.RaycastAll(transform.position, Vector2.down, transform.localScale.y / 2 + ESPILON).Where(r => r.transform.CompareTag("Ground")).Any();
+    private bool CanCrouch => IsGrounded && !FightFinished && HitStun <= 0;
+    private bool CanAttack => (!isAttacking || attackLanded) && !FightFinished && FightStarted && BlockStun <= 0 && HitStun <= 0;
+    private bool CanMove => IsGrounded && !isAttacking && !isCrouching && !FightFinished && BlockStun <= 0 && HitStun <= 0;
+    private bool CanJump => IsGrounded && !isAttacking && !FightFinished && BlockStun <= 0 && HitStun <= 0;
+
     private void FixedUpdate()
     {
-        var result = Physics2D.RaycastAll(transform.position, Vector2.down, transform.localScale.y / 2 + ESPILON);
-        isGrounded = result.Where(r => r.transform.CompareTag("Ground")).Any();
+        if (isCrouching && CanCrouch)
+        {
+            Sprite.localScale = new Vector3(1f, 0.5f, 1f);
+            Sprite.localPosition = new Vector3(0f, -0.25f, 0f);
+        } else
+        {
+            Sprite.localScale = Vector3.one;
+            Sprite.localPosition = Vector3.zero;
+        }
 
-        if (isGrounded)
+        if (isLightAttacking && CanAttack)
+        {
+            CancelAttacks();
+            isAttacking = true;
+            isLightAttacking = false;
+            attackLanded = false;
+            lightAttack.StartAttack();
+        }
+
+        if (isMediumAttacking && CanAttack)
+        {
+            CancelAttacks();
+            isAttacking = true;
+            isMediumAttacking = false;
+            attackLanded = false;
+            mediumAttack.StartAttack();
+        }
+
+        if (isHeavyAttacking && CanAttack)
+        {
+            CancelAttacks();
+            isAttacking = true;
+            isHeavyAttacking = false;
+            attackLanded = false;
+            heavyAttack.StartAttack();
+        }
+
+        if (isSpecialAttacking && CanAttack)
+        {
+            CancelAttacks();
+            isAttacking = true;
+            isSpecialAttacking = false;
+            attackLanded = false;
+            specialAttack.StartAttack();
+        }
+
+        if (CanMove)
         {
             rigidbody.velocity = new Vector2(movement * speed, rigidbody.velocity.y);
         }
 
-        if (isJumping && isGrounded)
+        if (isJumping && CanJump)
         {
             rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpSpeed);
-            isGrounded = false;
         }
+
+        HitStun--;
+        BlockStun--;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void HandleAttackEnd()
     {
-        if (collision.collider.CompareTag("Ground"))
-        {
-            isGrounded = true;
-        }
+        isAttacking = false;
+    }
+
+    private void HandleAttackLanded()
+    {
+        attackLanded = true;
+    }
+
+    private void CancelAttacks()
+    {
+        lightAttack.CancelAttack();
+        mediumAttack.CancelAttack();
+        heavyAttack.CancelAttack();
+        specialAttack.CancelAttack();
     }
 }

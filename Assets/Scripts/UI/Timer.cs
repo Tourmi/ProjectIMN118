@@ -42,10 +42,16 @@ public class Timer : MonoBehaviour
         timerText.text = currValue.ToString();
     }
 
+    public void ResetTimer()
+    {
+        currValue = startValue;
+        timerStarted = false;
+    }
+
     public void StartTimer()
     {
+        currValue = startValue;
         timerStarted = true;
         startTime = Time.time;
-        currValue = startValue;
     }
 }
