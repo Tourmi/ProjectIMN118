@@ -666,7 +666,7 @@ GameObject:
   - component: {fileID: 708115294}
   m_Layer: 0
   m_Name: RightCameraWall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1044,7 +1044,7 @@ GameObject:
   - component: {fileID: 1839979626}
   m_Layer: 0
   m_Name: LeftCameraWall
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1188,7 +1188,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2129572440145258942, guid: ce78c8680020bca42b503a86e7a32d8e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 2129572440145258942, guid: ce78c8680020bca42b503a86e7a32d8e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1583,7 +1583,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2129572440145258942, guid: 7ed0cd1c548ee264caaa3a14f6333938, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -998
+      value: -742
       objectReference: {fileID: 0}
     - target: {fileID: 2129572440145258942, guid: 7ed0cd1c548ee264caaa3a14f6333938, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1591,7 +1591,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2129572440145258942, guid: 7ed0cd1c548ee264caaa3a14f6333938, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 2129572440145258942, guid: 7ed0cd1c548ee264caaa3a14f6333938, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
