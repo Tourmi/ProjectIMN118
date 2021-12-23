@@ -21,6 +21,21 @@ public class CharacterButton : MonoBehaviour
     [SerializeField]
     private GameObject player2Cursor;
 
+    [SerializeField]
+    private Image player1Preview;
+    [SerializeField]
+    private Image player2Preview;
+    [SerializeField]
+    private string previewImage;
+
+    [SerializeField]
+    private AudioSource selectedButtonAudio;
+    [SerializeField]
+    private AudioSource pressedButtonAudio;
+
+    [SerializeField]
+    private CharacterSelectScreen selectScreen;
+
     protected Button button;
     public void Start()
     {
@@ -31,12 +46,24 @@ public class CharacterButton : MonoBehaviour
     {
         if (playerIndex == 1)
         {
+            if (player1Preview != null)
+            {
+                Sprite previewSprite = Resources.Load<Sprite>($"Textures/{previewImage}");
+                player1Preview.sprite = previewSprite;
+            }
+
             player1Cursor.SetActive(true);
         }
         else if (playerIndex == 2)
         {
+            if (player2Preview != null)
+            {
+                Sprite previewSprite = Resources.Load<Sprite>($"Textures/{previewImage}");
+                player2Preview.sprite = previewSprite;
+            }
             player2Cursor.SetActive(true);
         }
+        selectedButtonAudio.Play();
     }
 
     public void Deselect(int playerIndex)
@@ -44,7 +71,8 @@ public class CharacterButton : MonoBehaviour
         if (playerIndex == 1)
         {
             player1Cursor.SetActive(false);
-        } else if (playerIndex == 2)
+        }
+        else if (playerIndex == 2)
         {
             player2Cursor.SetActive(false);
         }
@@ -52,6 +80,8 @@ public class CharacterButton : MonoBehaviour
 
     public virtual void Press(int playerIndex)
     {
+        pressedButtonAudio.Play();
 
+        selectScreen.ShowConfirmation();
     }
 }
