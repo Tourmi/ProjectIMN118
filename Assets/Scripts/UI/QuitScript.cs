@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class QuitScript : MonoBehaviour
 {
-   public void ExitGame(){
-       Application.Quit();
+    public void ExitGame()
+    {
+        Debug.Log("Game is exiting");
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
 
-       Debug.Log("Game is exiting");
-   }
+#endif
+    }
 }
