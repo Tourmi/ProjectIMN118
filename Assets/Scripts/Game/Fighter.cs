@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Fighter : MonoBehaviour
@@ -18,7 +19,7 @@ public class Fighter : MonoBehaviour
     [SerializeField]
     private int dashDuration = 15;
     [SerializeField]
-    private Transform Sprite;
+    public SpriteRenderer Sprite;
     [SerializeField]
     public Transform Opponent;
 
@@ -197,13 +198,13 @@ public class Fighter : MonoBehaviour
     {
         if (isCrouching && CanCrouch)
         {
-            Sprite.localScale = new Vector3(1f, 0.5f, 1f);
-            Sprite.localPosition = new Vector3(0f, -0.25f, 0f);
+            Sprite.transform.localScale = new Vector3(1f, 0.5f, 1f);
+            Sprite.transform.localPosition = new Vector3(0f, -0.25f, 0f);
         }
         else
         {
-            Sprite.localScale = Vector3.one;
-            Sprite.localPosition = Vector3.zero;
+            Sprite.transform.localScale = Vector3.one;
+            Sprite.transform.localPosition = Vector3.zero;
         }
 
         if (isLightAttacking && CanAttack)

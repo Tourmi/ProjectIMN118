@@ -28,8 +28,6 @@ public class CharacterButton : MonoBehaviour
     private Image player1Preview;
     [SerializeField]
     private Image player2Preview;
-    [SerializeField]
-    private string previewImage;
 
     [SerializeField]
     private AudioSource selectedButtonAudio;
@@ -51,7 +49,14 @@ public class CharacterButton : MonoBehaviour
         {
             if (player1Preview != null)
             {
-                Sprite previewSprite = Resources.Load<Sprite>($"Textures/{previewImage}");
+                Sprite previewSprite;
+                if (character != null)
+                {
+                    previewSprite = character.Sprite.sprite;
+                } else
+                {
+                    previewSprite = Resources.Load<Sprite>($"Textures/DLC");
+                }
                 player1Preview.sprite = previewSprite;
             }
 
@@ -61,7 +66,15 @@ public class CharacterButton : MonoBehaviour
         {
             if (player2Preview != null)
             {
-                Sprite previewSprite = Resources.Load<Sprite>($"Textures/{previewImage}");
+                Sprite previewSprite;
+                if (character != null)
+                {
+                    previewSprite = character.Sprite.sprite;
+                }
+                else
+                {
+                    previewSprite = Resources.Load<Sprite>($"Textures/DLC");
+                }
                 player2Preview.sprite = previewSprite;
             }
             player2Cursor.SetActive(true);
