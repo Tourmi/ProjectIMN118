@@ -165,7 +165,7 @@ public class Game : MonoBehaviour
         overlayText.gameObject.SetActive(true);
         if (roundCounter.MatchEnded())
         {
-            overlayText.text = "Joueur 2 est le vainceur";
+            overlayText.text = "Joueur 2 est le vainqueur";
             TweenFactory.Tween("overlaytextAlpha", 3f, -1f, 4, null, UpdateOverlayTextTransparency, ReturnToMenu);
         }
         else

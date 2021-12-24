@@ -4197,7 +4197,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 657293431151688211, guid: f7d9b3729fc7cbd4189ef02374807c67, type: 3}
       propertyPath: m_Name
-      value: CharacterButtonEmpty
+      value: CharacterButton3
       objectReference: {fileID: 0}
     - target: {fileID: 657293431360133410, guid: f7d9b3729fc7cbd4189ef02374807c67, type: 3}
       propertyPath: m_Text
@@ -4259,6 +4259,10 @@ PrefabInstance:
       propertyPath: right
       value: 
       objectReference: {fileID: 1532534492}
+    - target: {fileID: 7359415001487596842, guid: f7d9b3729fc7cbd4189ef02374807c67, type: 3}
+      propertyPath: character
+      value: 
+      objectReference: {fileID: 8224281087317048769, guid: 19b36c3c97994f94c90cacb69387d491, type: 3}
     - target: {fileID: 7359415001487596842, guid: f7d9b3729fc7cbd4189ef02374807c67, type: 3}
       propertyPath: previewImage
       value: DLC
