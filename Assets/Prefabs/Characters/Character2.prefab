@@ -780,6 +780,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 2129572440145258942}
     m_Modifications:
     - target: {fileID: 2670342664930112897, guid: 4c4dcde78b37b454ca405f404a414fa5, type: 3}
+      propertyPath: m_Volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2670342664930112897, guid: 4c4dcde78b37b454ca405f404a414fa5, type: 3}
       propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 8300000, guid: 75047b7e6c8a75a458eb2e62503fc278, type: 3}
@@ -896,6 +900,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2129572440145258942}
     m_Modifications:
+    - target: {fileID: 2670342664930112897, guid: 4c4dcde78b37b454ca405f404a414fa5, type: 3}
+      propertyPath: m_Volume
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2670342664930112897, guid: 4c4dcde78b37b454ca405f404a414fa5, type: 3}
       propertyPath: m_audioClip
       value: 
@@ -1336,6 +1344,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2129572440145258942}
     m_Modifications:
+    - target: {fileID: 2670342664930112897, guid: 4c4dcde78b37b454ca405f404a414fa5, type: 3}
+      propertyPath: m_Volume
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2670342664930112897, guid: 4c4dcde78b37b454ca405f404a414fa5, type: 3}
       propertyPath: m_audioClip
       value: 
