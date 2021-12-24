@@ -16,19 +16,48 @@ public class Game : MonoBehaviour
     [SerializeField]
     private Fighter fighter2;
     [SerializeField]
+    private LifeBar leftHealth;
+    [SerializeField]
+    private LifeBar rightHealth;
+    [SerializeField]
+    private GameCamera gameCamera;
+    [SerializeField]
     private RoundCounter roundCounter;
     [SerializeField]
     private Vector3 initialPlayer1Position;
     [SerializeField]
     private Vector3 initialPlayer2Position;
 
+    [SerializeField]
+    private Transform gameplay;
+
     private bool fightEnded = false;
+    private Fighter fighter1Instance;
+    private Fighter fighter2Instance;
 
     private void Start()
     {
         timer.OnTimerFinished += FinishFight;
         roundCounter.Initialize();
         fightEnded = false;
+
+        if (CharacterSelectScreen.player1Fighter != null)
+        {
+            fighter1 = CharacterSelectScreen.player1Fighter;
+        }
+        if (CharacterSelectScreen.player2Fighter != null)
+        {
+            fighter2 = CharacterSelectScreen.player2Fighter;
+        }
+        fighter1Instance = Instantiate(fighter1, gameplay);
+        fighter2Instance = Instantiate(fighter2, gameplay);
+
+        leftHealth.fighter = fighter1Instance;
+        rightHealth.fighter = fighter2Instance;
+        gameCamera.character1 = fighter1Instance.transform;
+        gameCamera.character2 = fighter2Instance.transform;
+        fighter1Instance.Opponent = fighter2Instance.transform;
+        fighter2Instance.Opponent = fighter1Instance.transform;
 
         StartCountdown();
     }
@@ -39,22 +68,39 @@ public class Game : MonoBehaviour
         {
             return;
         }
-        if (fighter1.CurrentHealth <= 0 || fighter2.CurrentHealth <= 0)
+        if (fighter1Instance.CurrentHealth <= 0 || fighter2Instance.CurrentHealth <= 0)
         {
             FinishFight();
+        }
+        if (fighter1Instance.EnemyDirection < 0 && fighter1Instance.transform.localScale.x > 0)
+        {
+            fighter1Instance.transform.localScale = new Vector3(-fighter1Instance.transform.localScale.x, fighter1Instance.transform.localScale.y, fighter1Instance.transform.localScale.z);
+        }
+        else if (fighter1Instance.EnemyDirection > 0 && fighter1Instance.transform.localScale.x < 0)
+        {
+            fighter1Instance.transform.localScale = new Vector3(-fighter1Instance.transform.localScale.x, fighter1Instance.transform.localScale.y, fighter1Instance.transform.localScale.z);
+        }
+
+        if (fighter2Instance.EnemyDirection < 0 && fighter2Instance.transform.localScale.x > 0)
+        {
+            fighter2Instance.transform.localScale = new Vector3(-fighter2Instance.transform.localScale.x, fighter2Instance.transform.localScale.y, fighter2Instance.transform.localScale.z);
+        }
+        else if (fighter2Instance.EnemyDirection > 0 && fighter2Instance.transform.localScale.x < 0)
+        {
+            fighter2Instance.transform.localScale = new Vector3(-fighter2Instance.transform.localScale.x, fighter2Instance.transform.localScale.y, fighter2Instance.transform.localScale.z);
         }
     }
 
     private void FinishFight()
     {
         fightEnded = true;
-        fighter1.FightFinished = true;
-        fighter2.FightFinished = true;
+        fighter1Instance.FightFinished = true;
+        fighter2Instance.FightFinished = true;
 
-        bool fighter1Dead = fighter1.CurrentHealth <= 0;
-        bool fighter2Dead = fighter2.CurrentHealth <= 0;
-        float fighter1HealthRatio = fighter1.CurrentHealth / fighter1.MaxHealth;
-        float fighter2HealthRatio = fighter2.CurrentHealth / fighter2.MaxHealth;
+        bool fighter1Dead = fighter1Instance.CurrentHealth <= 0;
+        bool fighter2Dead = fighter2Instance.CurrentHealth <= 0;
+        float fighter1HealthRatio = fighter1Instance.CurrentHealth / fighter1Instance.MaxHealth;
+        float fighter2HealthRatio = fighter2Instance.CurrentHealth / fighter2Instance.MaxHealth;
 
         if (fighter1Dead && fighter2Dead)
         {
@@ -143,8 +189,8 @@ public class Game : MonoBehaviour
     {
         fightEnded = false;
         timer.ResetTimer();
-        fighter1.Initialize(initialPlayer1Position);
-        fighter2.Initialize(initialPlayer2Position);
+        fighter1Instance.Initialize(initialPlayer1Position);
+        fighter2Instance.Initialize(initialPlayer2Position);
         roundCounter.NextRound();
 
         overlayText.gameObject.SetActive(true);
@@ -176,7 +222,7 @@ public class Game : MonoBehaviour
         TweenFactory.Tween("overlaytextAlpha", 2f, -0.25f, 1.25f, null, UpdateOverlayTextTransparency, null);
 
         timer.StartTimer();
-        fighter1.FightStarted = true;
-        fighter2.FightStarted = true;
+        fighter1Instance.FightStarted = true;
+        fighter2Instance.FightStarted = true;
     }
 }

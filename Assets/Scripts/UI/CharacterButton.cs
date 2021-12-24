@@ -17,6 +17,9 @@ public class CharacterButton : MonoBehaviour
     public CharacterButton right;
 
     [SerializeField]
+    public Fighter character;
+
+    [SerializeField]
     private GameObject player1Cursor;
     [SerializeField]
     private GameObject player2Cursor;

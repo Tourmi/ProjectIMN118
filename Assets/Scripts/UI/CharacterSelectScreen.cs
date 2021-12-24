@@ -7,6 +7,9 @@ using UnityEngine.SceneManagement;
 
 public class CharacterSelectScreen : MonoBehaviour
 {
+    public static Fighter player1Fighter;
+    public static Fighter player2Fighter;
+
     [SerializeField]
     private PlayerSelection player1Selection;
     [SerializeField]
@@ -16,9 +19,9 @@ public class CharacterSelectScreen : MonoBehaviour
     [SerializeField]
     private GameObject confirmCharacterSelection;
 
+
     public void LoadFightScene()
     {
-
         SceneManager.LoadScene("Scenes/Fight");
     }
 
@@ -30,6 +33,8 @@ public class CharacterSelectScreen : MonoBehaviour
             player1Selection.IsInConfirmationScreen(true);
             player2Selection.IsInConfirmationScreen(true);
 
+            player1Fighter = player1Selection.currentSelection.character;
+            player2Fighter = player2Selection.currentSelection.character;
         }
     }
 }

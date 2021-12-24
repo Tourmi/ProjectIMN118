@@ -20,7 +20,7 @@ public class Fighter : MonoBehaviour
     [SerializeField]
     private Transform Sprite;
     [SerializeField]
-    private Transform Opponent;
+    public Transform Opponent;
 
     [Header("Attacks")]
     [SerializeField]

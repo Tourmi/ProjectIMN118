@@ -8,9 +8,9 @@ public class GameCamera : MonoBehaviour
     [SerializeField]
     private Stage stage;
     [SerializeField]
-    private Transform character1;
+    public Transform character1;
     [SerializeField]
-    private Transform character2;
+    public Transform character2;
     [SerializeField]
     private Transform leftCameraWall;
     [SerializeField]
@@ -26,6 +26,11 @@ public class GameCamera : MonoBehaviour
 
     private void Update()
     {
+        if (character1 == null || character2 == null)
+        {
+            return;
+        }
+
         float resolutionRatio = gameCamera.orthographicSize * Screen.width / Screen.height;
 
         float horizontalPos = (character1.position.x + character2.position.x) / 2;

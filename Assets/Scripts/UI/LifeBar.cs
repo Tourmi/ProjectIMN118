@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[ExecuteAlways]
 public class LifeBar : MonoBehaviour
 {
     [SerializeField]
@@ -13,10 +12,15 @@ public class LifeBar : MonoBehaviour
     [SerializeField]
     private Slider lifeSlider3;
     [SerializeField]
-    private Fighter fighter;
+    public Fighter fighter;
 
     void Update()
     {
+        if (fighter == null)
+        {
+            return;
+        }
+
         float healthPerBar = fighter.MaxHealth / 3f;
         //Red life
         lifeSlider3.value = Mathf.Min(1f, fighter.CurrentHealth / healthPerBar);

@@ -4055,6 +4055,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1625152551}
     - target: {fileID: 7359415001487596842, guid: f7d9b3729fc7cbd4189ef02374807c67, type: 3}
+      propertyPath: character
+      value: 
+      objectReference: {fileID: 8224281087317048769, guid: 7ed0cd1c548ee264caaa3a14f6333938, type: 3}
+    - target: {fileID: 7359415001487596842, guid: f7d9b3729fc7cbd4189ef02374807c67, type: 3}
       propertyPath: previewImage
       value: Captain_Falcon_character_portrait
       objectReference: {fileID: 0}
@@ -4794,6 +4798,7 @@ MonoBehaviour:
   down: {fileID: 0}
   left: {fileID: 0}
   right: {fileID: 481851652}
+  character: {fileID: 0}
   player1Cursor: {fileID: 2124296998}
   player2Cursor: {fileID: 1104085794}
   player1Preview: {fileID: 0}
@@ -5228,6 +5233,10 @@ PrefabInstance:
       propertyPath: left
       value: 
       objectReference: {fileID: 1654806628}
+    - target: {fileID: 7359415001487596842, guid: f7d9b3729fc7cbd4189ef02374807c67, type: 3}
+      propertyPath: character
+      value: 
+      objectReference: {fileID: 8224281087317048769, guid: ce78c8680020bca42b503a86e7a32d8e, type: 3}
     - target: {fileID: 7359415001487596842, guid: f7d9b3729fc7cbd4189ef02374807c67, type: 3}
       propertyPath: previewImage
       value: SFZ_Fox_McCloud

@@ -10,7 +10,7 @@ public class PlayerSelection : MonoBehaviour
     [SerializeField]
     private CharacterButton defaultSelection;
 
-    private CharacterButton currentSelection { get; set; }
+    public CharacterButton currentSelection { get; private set; }
 
     public bool canMove = true;
     private bool isInCharacterSelectScreen = false;
