@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class Attack : MonoBehaviour
 {
     public event Action OnAttackEnd;
@@ -24,6 +25,12 @@ public class Attack : MonoBehaviour
     private int currentFrame = -1;
 
     private bool hitboxActive = false;
+    private AudioSource audio;
+
+    private void Start()
+    {
+        audio = GetComponent<AudioSource>();
+    }
 
     private void FixedUpdate()
     {
@@ -38,6 +45,7 @@ public class Attack : MonoBehaviour
                 HitboxPreview.SetActive(false);
                 HitboxVisual.SetActive(true);
                 hitboxActive = true;
+                audio.Play();
             }
             else if (currentFrame == StartFrames + ActiveFrames)
             {
