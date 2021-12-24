@@ -80,10 +80,11 @@ public class PlayerSelection : MonoBehaviour
             return;
         if (isInConfirmationScreen)
             return;
+        if (currentSelection.character == null && !(currentSelection is BackCharacterButton))
+            return;
 
         canMove = (currentSelection is BackCharacterButton);
         currentSelection.Press(playerIndex);
-      
     }
 
     private void OnCancel()
@@ -92,9 +93,7 @@ public class PlayerSelection : MonoBehaviour
             return;
         if(isInConfirmationScreen)
             return;
-        
 
         canMove = true;
-        // Do something when canceling selection?
     }
 }
